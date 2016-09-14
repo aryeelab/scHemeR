@@ -1,0 +1,6 @@
+library(shiny)
+library(plotly)
+library(ggplot2)
+library(stringr)
+library(shinythemes)
+library(reshape2)
