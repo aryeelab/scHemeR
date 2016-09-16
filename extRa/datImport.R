@@ -4,6 +4,9 @@ rgbclust <- readRDS("data/rgbclust.rds")
 pca <- readRDS("data/pca.rds")
 tfnames <- readRDS("data/tfnames.rds")
 tfdat <- readRDS("data/tfdat.rds")
+pwms <- readRDS("data/pwms.rds")
+
+varTF <- apply(tfdat, 2, var)
 
 # Remove the text before the first underscore to simplify
 tt <- sapply(tfnames, function(n){

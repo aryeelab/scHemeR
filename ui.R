@@ -9,27 +9,40 @@ shinyUI(navbarPage(HTML("<img src='harvard-logo.png'/>"),
 
 tabPanel("Visualize",
 fluidPage(
+    fluidRow(
     headerPanel(
         HTML("<h1><b><P ALIGN=Center>Welcome to the scHemer webapp</b></h1>")),
-    tags$br(), tags$br(),tags$br(),HTML("<h4><b><P ALIGN=Center>Buenrostro Lab</b></h4>"),
-    tags$br(),tags$br(),
-    sidebarPanel(
-        tags$h3(tags$b('Configure Visualization')), 
-        tags$br(),
-        selectInput("colorVisPoints", "Specify Color Type", selected = "Cluster", selectize = TRUE,
-            choices = list("Cell Annotation" = c("Cell", "Cluster"),
-                            "Transcription Factor Annotation" = tfshort)),
+    shiny::tags$br(),shiny::tags$br(), shiny::tags$br(), HTML("<h4><b><P ALIGN=Center>Buenrostro Lab</b></h4>"),
+    shiny::tags$br(),shiny::tags$br(),
+    bsCollapse(id = "collapseAdvancedPlotOptions", open = c("Panel1"), multiple = TRUE,
+    bsCollapsePanel(title = HTML("<h4><b>Visualization Options</b></h4>"), value = "Panel1",
+    fluidRow(
+        column(1, shiny::tags$br()),
+        column(6,
+        selectInput("colorVisPoints", "Specify Color Logic", selected = "Cell", selectize = TRUE,
+            choices = list("Annotation" = c("Cell", "Cluster", "Transcription Factor"))),
+        shiny::tags$br(),
         conditionalPanel('input.colorVisPoints != "Cell" && input.colorVisPoints != "Cluster"', 
-            uiOutput("minMaxColor"), 
+            uiOutput("tfname"),
+            checkboxInput("sortVar", "Sort TFs by variance?", value = TRUE, width = NULL))
+        ),
+        column(5,
+        conditionalPanel('input.colorVisPoints != "Cell" && input.colorVisPoints != "Cluster"', 
             selectInput("contColorTheme", "Specify Color Theme", selected = "Spectral", 
                 choices = list("Sequential" = c("Blues", "YlOrRd", "YlGnBu"),
-                "Diverging" = c("Spectral", "PuOr", "RdGy", "PiYG"))))
-        # verbatimTextOutput("brush")
-    ),
+                "Diverging" = c("Spectral", "PuOr", "RdGy", "PiYG"))), shiny::tags$br(),
+            uiOutput("minMaxColor")
+        ))
+    ))
+    ), 
     mainPanel(
-        plotlyOutput("plotgraph1", height = 800),
-        tags$br(), tags$br()
-    )
+        plotlyOutput("plotgraph1", height = "1000", width = "150%")
+    )), shiny::tags$br(),shiny::tags$br(),
+    conditionalPanel('input.colorVisPoints != "Cell" && input.colorVisPoints != "Cluster"', 
+        bsCollapse(id = "tfMotif", open = c("Panel2"), multiple = TRUE,
+        bsCollapsePanel(title = HTML("<h4><b>Transcription Factor Motif</b></h4>"), value = "Panel2",
+        fluidRow(plotOutput("TFplot")))
+    ))
 )),                   
                                       
 ##########
