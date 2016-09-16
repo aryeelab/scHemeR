@@ -27,7 +27,6 @@ shinyServer(function(input, output, session) {
     })
 
     observe({
-        print(input$colorVisPoints )
         if(input$colorVisPoints != "Cell" & input$colorVisPoints != "Cluster"){
             rv$valVec <- tfdat[,input$tfname] 
             rv$minColVal <- round(min(rv$valVec), 1)
@@ -68,7 +67,6 @@ shinyServer(function(input, output, session) {
         if(input$colorVisPoints == "Cell" | input$colorVisPoints == "Cluster"){
             return(NULL)
         } else {
-            print(input$colorVisPoints)
             m <- 2^pwms[[input$tfname]]
             seqLogo(t(t(m)/colSums(m)))
         }
