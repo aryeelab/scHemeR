@@ -2,9 +2,9 @@ name: scHemer
 account: caleblareau
 server: shinyapps.io
 appId: 125580
-bundleId: 559088
+bundleId: 561893
 url: https://caleblareau.shinyapps.io/scHemer/
-when: 1474003654.09863
+when: 1474312585.09491
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: dataProcess/cisbp_hg19_unique.08_Jun_2016.RData|dataProcess/datProcess.R|dataProcess/scHemeData_v2.txt
+ignoredFiles: dataProcess/cisbp_hg19_unique.08_Jun_2016.RData|dataProcess/datProcess.R|dataProcess/hg19_corrMat_08-Jun-2016.mat|dataProcess/mm9_corrMat_08-Jun-2016.mat|dataProcess/scHemeData_v2.txt

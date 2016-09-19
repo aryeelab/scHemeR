@@ -42,3 +42,17 @@ n <- "ENSG00000113658_LINE19373_SMAD5_I_N1"
 m <- t(t(2^pwms[[n]])/colSums(2^pwms[[n]]))
 seqLogo(m)
 
+
+### Deal with correlation matrices
+library(R.matlab)
+library(reshape2)
+
+m <- readMat("dataProcess/hg19_corrMat_08-Jun-2016.mat")
+corM <- m$corrMat
+colnames(corM) <- unname(unlist(m$TFnames))
+row.names(corM) <- unname(unlist(m$TFnames))
+corM[upper.tri(corM, diag = TRUE)] <- NA
+mlong <- reshape2::melt(corM, na.rm = TRUE)
+rownames(mlong) <- NULL
+
+saveRDS(mlong, "data/humanTFcorr.rds")

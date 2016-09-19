@@ -18,12 +18,13 @@ shinyServer(function(input, output, session) {
     })
     
     output$tfname <- renderUI({
-        if(input$sortVar){ tts <- tfshort[order(varTF, decreasing=TRUE)]
+        if(input$sortVar){
+            tts <- tfshort[order(varTF, decreasing=TRUE)]
         } else {
             tts <- tfshort
         }
         selectInput("tfname", "Select Transcription Factor", selectize = TRUE, 
-            selected = "LINE3434_SOX11_I", choices = list("TF Annotation" = tts))
+            selected = "LINE487_JUNB_D_N3", choices = list("TF Annotation" = tts))
     })
 
     observe({
@@ -56,9 +57,15 @@ shinyServer(function(input, output, session) {
             col[col < input$minMaxColor[1]] <- input$minMaxColor[1]
             col[col > input$minMaxColor[2]] <- input$minMaxColor[2]
             d <- data.frame(cellnames, pca, Score = col, stringsAsFactors = FALSE)
-            plot_ly(d, x = PC1, y = PC2, z = PC3, text = paste0("Cell:", cellnames),
-                    type="scatter3d", mode="markers", marker = list(size = 3),
-                    color = Score, colors = input$contColorTheme)
+            
+            #Adjust for spectral
+            if(input$contColorTheme == "Spectral"){
+                cols <- rev(RColorBrewer::brewer.pal(11, "Spectral")) 
+                } else { cols <- input$contColorTheme
+            }
+            plot_ly(d, x = PC1, y = PC2, z = PC3, text = c(paste0("Cell: ", cellnames, "<br>", "TF Score: ", Score)),
+                        type="scatter3d", mode="markers", marker = list(size = 3),
+                        color = Score, colors = cols)
         }
         
     })
@@ -67,8 +74,9 @@ shinyServer(function(input, output, session) {
         if(input$colorVisPoints == "Cell" | input$colorVisPoints == "Cluster"){
             return(NULL)
         } else {
-            m <- 2^pwms[[input$tfname]]
-            seqLogo(t(t(m)/colSums(m)))
+           x <- pwms[[input$tfname]]
+           m <- round(-0.258 * (0.0310078- exp(x)), 4)
+           seqLogo(m)
         }
     })
 
