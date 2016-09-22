@@ -21,6 +21,28 @@ pca <- apply(pca, 2, range02)
 tfnames <- names(dat[,c(13:dim(dat)[2])])
 tfdat <- data.matrix(dat[,c(13:dim(dat)[2])])
 
+# Do Cell types
+cn <- cellnames
+ss <- strsplit(cn, "-")
+ctypes <- sapply(1:length(ss), function(i){
+    if(i <= 419) ss[[i]][3]
+    else if(i <= 445)ss[[i]][2]
+    else if(i <= 574) ss[[i]][3]
+    else if(i <= 1002) ss[[i]][2]
+    else if(i <= 1169) ss[[i]][3]
+    else if(i <= 1255) ss[[i]][2]
+    else if(i <= 1675) ss[[i]][3]
+    else ss[[i]][5]
+})
+
+# Updates from Jason
+ctypes[ctypes == "UNK"] <- "GMP1low"
+ctypes[ctypes == "MCP"] <- "pDC"
+
+df <- cbind(cn,ctypes)
+colnames(df) <- c("name", "type")
+
+saveRDS(df, "data/celltypes.rds")
 saveRDS(cellnames, "data/cellnames.rds")
 saveRDS(rgbhex, "data/rgbhex.rds")
 saveRDS(rgbclust, "data/rgbclust.rds")
