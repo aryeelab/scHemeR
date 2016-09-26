@@ -24,6 +24,7 @@ fluidPage(
         shiny::tags$br(),
         conditionalPanel('input.colorVisPoints != "Cell" && input.colorVisPoints != "Cluster"', 
             uiOutput("tfname"),
+            textOutput("tfvarianceval"),
             checkboxInput("sortVar", "Sort TFs by variance?", value = TRUE, width = NULL))
         ),
         column(5,

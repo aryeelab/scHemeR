@@ -8,7 +8,8 @@ shinyServer(function(input, output, session) {
         maxColVal = 10,
         small2Sig = 2,
         big2Sig = 8, 
-        valVec = c(0,10)
+        valVec = c(0,10), 
+        varValue = 1
         )
     
     output$minMaxColor <- renderUI({
@@ -39,7 +40,6 @@ shinyServer(function(input, output, session) {
     
 
     output$plotgraph1 = renderPlotly({
-
         if(input$colorVisPoints == "Cell" | input$colorVisPoints == "Cluster"){
             if(input$colorVisPoints == "Cell"){
                 cf <- factor(rgbhex, levels = as.character(unique(rgbhex)), ordered = TRUE)
@@ -68,6 +68,13 @@ shinyServer(function(input, output, session) {
                         color = Score, colors = cols)
         }
         
+    })
+    
+    output$tfvarianceval <- renderText({
+        if(!(input$colorVisPoints == "Cell" | input$colorVisPoints == "Cluster")){
+            rv$varValue <- varTF[input$tfname]
+        }
+        paste0("Variance: ", as.character(round(rv$varValue,2)))
     })
     
     output$TFplot <- renderPlot({
