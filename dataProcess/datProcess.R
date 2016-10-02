@@ -78,3 +78,35 @@ mlong <- reshape2::melt(corM, na.rm = TRUE)
 rownames(mlong) <- NULL
 
 saveRDS(mlong, "data/humanTFcorr.rds")
+
+# Process correlation lists
+corvals <- seq(0.15, 1.00, 0.01)
+listTFs <- lapply(corvals, function(cor){
+    print(cor)
+    TFnames <- tfshort[order(varTF, decreasing=TRUE)]
+    hTFc <-  mlong
+    i <- 1
+    TFgroups <- list()
+    while(length(TFnames) != 0){
+        # Name
+        tfcur <- TFnames[[1]]
+        s <- strsplit(tfcur, split = "_")[[1]]
+        tfshortname <- paste(s[2:length(s)], collapse = "_")
+        #Find matches
+        boo <- (hTFc$Var1 == tfcur | hTFc$Var2 == tfcur) & hTFc$value >= cor
+        hits <- hTFc[boo, ]
+        tfhits <- unique(c(as.character(hits$Var1), as.character(hits$Var2), tfcur))
+        #Update lists
+        TFnames <- TFnames[!(TFnames %in% tfhits)]
+        sing <- list(tfhits)
+        nn <- c(names(TFgroups), paste0("Group ", as.character(i), " ~ ", tfshortname))
+        TFgroups[i] <- sing
+        names(TFgroups) <- nn
+        hTFc <- hTFc[hTFc$Var1 %in% TFnames & hTFc$Var2 %in% TFnames,]
+        i <- i + 1
+    }
+    TFgroups
+})
+names(listTFs) <- paste0("g", as.character(corvals))
+saveRDS(listTFs, "data/listTFs.rds")
+

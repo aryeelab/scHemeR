@@ -19,13 +19,22 @@ fluidPage(
     fluidRow(
         column(1, shiny::tags$br()),
         column(6,
-        selectInput("colorVisPoints", "Specify Color Logic", selected = "Cell", selectize = TRUE,
-            choices = list("Annotation" = c("Cell", "Cluster", "Transcription Factor"))),
+        selectInput("colorVisPoints", "Specify Annotation", selected = "Cell", selectize = TRUE,
+            choices = list("Annotation" = c("Cell", "Cluster",
+                            "Transcription Factor Score", "Transcription Factor Cluster"))),
         shiny::tags$br(),
         conditionalPanel('input.colorVisPoints != "Cell" && input.colorVisPoints != "Cluster"', 
+            conditionalPanel('input.colorVisPoints == "Transcription Factor Score"', 
             uiOutput("tfname"),
-            textOutput("tfvarianceval"),
-            checkboxInput("sortVar", "Sort TFs by variance?", value = TRUE, width = NULL))
+            checkboxInput("sortVar", "Sort TFs by variance?", value = TRUE, width = NULL)),
+            conditionalPanel('input.colorVisPoints == "Transcription Factor Cluster"', 
+                sliderInput("groupCor", "Minimum TF Correlation", 
+                    min = 0.2, max = 0.99, value = 0.1, step = 0.01),
+                uiOutput("tfpossiblegroups"),
+                uiOutput("groupTFopts")
+                ),
+            textOutput("tfvarianceval")
+        )
         ),
         column(5,
         conditionalPanel('input.colorVisPoints != "Cell" && input.colorVisPoints != "Cluster"', 

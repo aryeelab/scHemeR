@@ -24,6 +24,8 @@ While the attribute for the color selection input and transcription factor is a 
 <img src="selectize.png" />
 <br><br>
 The transcription factor scores are visualized as continuous variables. Users can also choose to sort the different factor options by the variability in the scores (in descending order). 
+<br><br>
+Transcription factors can also be clustered based on group belongingness by specifying "Transcription Factor Cluster." To make these groupings, users specify a minimum correlation threshold for inclusion. The most variable transcription factor is then grouped with all members who are correlated above the user-defined threshold. These grouped factors are then removed and the group assignments continue iteratively by selecting the next most variable factor until each member is assigned to a group. When a particular factor is alone in the group, the user will not see any options to select (only "Members" will appear). Each of these menus is also searchable by typing shown above. 
 <hr>
 
 <a name="pltly"></a>

@@ -9,7 +9,12 @@ shinyServer(function(input, output, session) {
         small2Sig = 2,
         big2Sig = 8, 
         valVec = c(0,10), 
-        varValue = 1
+        varValue = 1,
+        tfname = "ENSG00000171223_LINE487_JUNB_D_N3",
+        corrVal = "0.2",
+        tsg =  "Group 1 ~ LINE487_JUNB_D_N3",
+        tsgp = NULL,
+        tcfg = NULL
         )
     
     output$minMaxColor <- renderUI({
@@ -27,10 +32,23 @@ shinyServer(function(input, output, session) {
         selectInput("tfname", "Select Transcription Factor", selectize = TRUE, 
             selected = "LINE487_JUNB_D_N3", choices = list("TF Annotation" = tts))
     })
+    
+    output$tfpossiblegroups <- renderUI({
+        ggroup <- paste0("g", rv$corrVal)
+        selectInput("tfspecifiedgroup", "Specify Grouping", selectize = TRUE,
+            selected = NULL, choices = list("Groups" = names(listTFs[[ggroup]])))
+    })
+    
+    output$groupTFopts <- renderUI({
+        ggroup <- paste0("g", rv$corrVal)
+        choicesTFingroup <- listTFs[[ggroup]][[rv$tsg]]
+        selectInput("TFchosenFromGroup", "Select TF from Group", selectize = TRUE,
+            selected = NULL, choices = list("Members" = unname(tt[choicesTFingroup])))
+    })
 
     observe({
         if(input$colorVisPoints != "Cell" & input$colorVisPoints != "Cluster"){
-            rv$valVec <- tfdat[,input$tfname] 
+            rv$valVec <- tfdat[,rv$tfname] 
             rv$minColVal <- round(min(rv$valVec), 1)
             rv$maxColVal <- round(max(rv$valVec), 1)
             rv$small2Sig <- round(mean(rv$valVec) - 2*sd(rv$valVec), 1)
@@ -38,7 +56,18 @@ shinyServer(function(input, output, session) {
         }
     })
     
-
+    observe({ rv$tfname <- input$tfname })
+    observe({ 
+        rv$corrVal <- as.character(input$groupCor)
+        rv$tsgp <- NULL
+        rv$tcfg <- NULL
+        rv$tsg <- "Group 1 ~ LINE487_JUNB_D_N3"
+        rv$tfname  <- "ENSG00000171223_LINE487_JUNB_D_N3"
+        
+    })
+    observe({ rv$tsg <- input$tfspecifiedgroup })
+    observe({ rv$tfname <- tfshort[input$TFchosenFromGroup] }) 
+    
     output$plotgraph1 = renderPlotly({
         if(input$colorVisPoints == "Cell" | input$colorVisPoints == "Cluster"){
             if(input$colorVisPoints == "Cell"){
@@ -72,7 +101,7 @@ shinyServer(function(input, output, session) {
     
     output$tfvarianceval <- renderText({
         if(!(input$colorVisPoints == "Cell" | input$colorVisPoints == "Cluster")){
-            rv$varValue <- varTF[input$tfname]
+            rv$varValue <- varTF[rv$tfname]
         }
         paste0("Variance: ", as.character(round(rv$varValue,2)))
     })
@@ -81,7 +110,7 @@ shinyServer(function(input, output, session) {
         if(input$colorVisPoints == "Cell" | input$colorVisPoints == "Cluster"){
             return(NULL)
         } else {
-           x <- pwms[[input$tfname]]
+           x <- pwms[[rv$tfname]]
            m <- round(-0.258 * (0.0310078- exp(x)), 4)
            seqLogo(m)
         }
