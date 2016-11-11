@@ -76,9 +76,9 @@ shinyServer(function(input, output, session) {
                 cf <- factor(rgbclust, levels = as.character(unique(rgbclust)), ordered = TRUE)
             }
             d <- data.frame(cellnames, pca, colidx = as.integer(cf))
-            plot_ly(d, x = PC1, y = PC2, z = PC3, text = paste0("Cell:", cellnames),
+            plot_ly(d, x = ~PC1, y = ~PC2, z = ~PC3, text = paste0("Cell:", cellnames),
                     type="scatter3d", mode="markers", marker = list(size = 3),
-                    color = as.ordered(colidx), colors = rev(as.character(unique(cf)))) %>%
+                    color = ~as.ordered(colidx), colors = as.character(unique(cf))) %>%
                 layout(showlegend = FALSE)
             
         } else { # TF score
@@ -92,9 +92,9 @@ shinyServer(function(input, output, session) {
                 cols <- rev(RColorBrewer::brewer.pal(11, "Spectral")) 
                 } else { cols <- input$contColorTheme
             }
-            plot_ly(d, x = PC1, y = PC2, z = PC3, text = c(paste0("Cell: ", cellnames, "<br>", "TF Score: ", Score)),
+            plot_ly(d, x = ~PC1, y = ~PC2, z = ~PC3, text = ~paste0("Cell: ",  cellnames, "<br>", "TF Score: ", Score),
                         type="scatter3d", mode="markers", marker = list(size = 3),
-                        color = Score, colors = cols)
+                        color = ~Score, colors = cols)
         }
         
     })
