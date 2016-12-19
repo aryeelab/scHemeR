@@ -12,7 +12,7 @@ shinyServer(function(input, output, session) {
         varValue = 1,
         tfname = "ENSG00000171223_LINE487_JUNB_D_N3",
         corrVal = "0.2",
-        tsg =  "Group 1 ~ LINE487_JUNB_D_N3",
+        tsg =  "Group 1 ~ JUNB_D_N3",
         tsgp = NULL,
         tcfg = NULL
         )
@@ -75,11 +75,16 @@ shinyServer(function(input, output, session) {
             } else {
                 cf <- factor(rgbclust, levels = as.character(unique(rgbclust)), ordered = TRUE)
             }
-            d <- data.frame(cellnames, pca, colidx = as.integer(cf))
-            plot_ly(d, x = ~PC1, y = ~PC2, z = ~PC3, text = paste0("Cell:", cellnames),
+            
+            a <- input$xaxisVal
+            b <- input$yaxisVal
+            c <- input$zaxisVal
+
+            d <- data.frame(cellnames, X = pca[,a], Y = pca[,b], Z = pca[,c], colidx = as.integer(cf))
+            plot_ly(d, x = ~X, y = ~Y, z = ~Z, text = paste0("Cell:", cellnames),
                     type="scatter3d", mode="markers", marker = list(size = 3),
                     color = ~as.ordered(colidx), colors = as.character(unique(cf))) %>%
-                layout(showlegend = FALSE)
+                layout(title = "", showlegend = FALSE,scene = list(xaxis = list(title = a), yaxis = list(title = b), zaxis = list(title = c)))
             
         } else { # TF score
             col <- as.numeric(rv$valVec)

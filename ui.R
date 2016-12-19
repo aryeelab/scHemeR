@@ -17,8 +17,12 @@ fluidPage(
     bsCollapse(id = "collapseAdvancedPlotOptions", open = c("Panel1"), multiple = TRUE,
     bsCollapsePanel(title = HTML("<h4><b>Visualization Options</b></h4>"), value = "Panel1",
     fluidRow(
-        column(1, shiny::tags$br()),
-        column(6,
+        column(4, 
+        selectInput("xaxisVal", "X-Axis", selected = "PC1",  choices = c("PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")), 
+        selectInput("yaxisVal", "Y-Axis", selected = "PC2",  choices = c("PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10")), 
+        selectInput("zaxisVal", "Z-Axis", selected = "PC3",  choices = c("PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10"))
+        ),
+        column(4,
         selectInput("colorVisPoints", "Specify Annotation", selected = "Cell", selectize = TRUE,
             choices = list("Annotation" = c("Cell", "Cluster",
                             "Transcription Factor Score", "Transcription Factor Cluster"))),
@@ -36,7 +40,7 @@ fluidPage(
             textOutput("tfvarianceval")
         )
         ),
-        column(5,
+        column(4,
         conditionalPanel('input.colorVisPoints != "Cell" && input.colorVisPoints != "Cluster"', 
             selectInput("contColorTheme", "Specify Color Theme", selected = "Spectral", 
                 choices = list("Sequential" = c("Blues", "YlOrRd", "YlGnBu"),
