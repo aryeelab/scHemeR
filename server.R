@@ -83,28 +83,42 @@ shinyServer(function(input, output, session) {
             }
 
             d <- data.frame(cellnames, X = pca[,a], Y = pca[,b], Z = pca[,c], colidx = as.integer(cf))
-            plot_ly(d, x = ~X, y = ~Y, z = ~Z, text = paste0("Cell:", cellnames),
+            
+            if(input$dimPlot == "3D"){
+                plot_ly(d, x = ~X, y = ~Y, z = ~Z, text = paste0("Cell:", cellnames),
                     type="scatter3d", mode="markers", marker = list(size = 3),
                     color = ~as.ordered(colidx), colors = as.character(unique(cf))) %>% layout(dragmode = "orbit", scene = list(aspectmode = 'cube')) %>%
                 layout(title = "", showlegend = FALSE, scene = list(xaxis = list(title = a), yaxis = list(title = b), zaxis = list(title = c), camera = le))
-            
+            } else {
+                plot_ly(d, x = ~X, y = ~Y, text = paste0("Cell:", cellnames),
+                    mode="markers", marker = list(size = 6),
+                    color = ~as.ordered(colidx), colors = as.character(unique(cf))) %>%
+                layout(title = "", showlegend = FALSE, xaxis = list(title = a), yaxis = list(title = b))
+            }
         } else { # TF score
             col <- as.numeric(rv$valVec)
             col[col < input$minMaxColor[1]] <- input$minMaxColor[1]
             col[col > input$minMaxColor[2]] <- input$minMaxColor[2]
-            d <- data.frame(cellnames, pca, Score = col, stringsAsFactors = FALSE)
+            d <- data.frame(cellnames, X = pca[,a], Y = pca[,b], Z = pca[,c], Score = col, stringsAsFactors = FALSE)
             
             #Adjust for spectral
             if(input$contColorTheme == "Spectral"){
                 cols <- rev(RColorBrewer::brewer.pal(11, "Spectral")) 
-                } else { cols <- input$contColorTheme
-            }
-            plot_ly(d, x = ~PC1, y = ~PC2, z = ~PC3, text = ~paste0("Cell: ",  cellnames, "<br>", "TF Score: ", Score),
+                } else { 
+                    cols <- input$contColorTheme
+                }
+            if(input$dimPlot == "3D"){
+                plot_ly(d, x = ~PC1, y = ~PC2, z = ~PC3, text = ~paste0("Cell: ",  cellnames, "<br>", "TF Score: ", Score),
                         type="scatter3d", mode="markers", marker = list(size = 3),
                         color = ~Score, colors = cols) %>% layout(dragmode = "orbit",  scene = list(aspectmode = 'cube')) %>%
                 layout(title = "", showlegend = FALSE, scene = list(xaxis = list(title = a), yaxis = list(title = b), zaxis = list(title = c), camera = le))
+            } else { #2D map
+                 plot_ly(d, x = ~X, y = ~Y, text = ~paste0("Cell: ",  cellnames, "<br>", "TF Score: ", Score),
+                    mode="markers", marker = list(size = 6),
+                    color = ~Score, colors = cols) %>%
+                layout(title = "", showlegend = FALSE, xaxis = list(title = a), yaxis = list(title = b))
+            }
         }
-        
     })
     
     output$tfvarianceval <- renderText({
