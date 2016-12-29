@@ -50,7 +50,7 @@ fluidPage(
     ))
     ), 
     mainPanel(
-        plotlyOutput("plotgraph1", height = "1000", width = "150%")
+        plotlyOutput("plotgraph1", height = "800", width = "150%")
     )), shiny::tags$br(),shiny::tags$br(),
     conditionalPanel('input.colorVisPoints != "Cell" && input.colorVisPoints != "Cluster"', 
         bsCollapse(id = "tfMotif", open = c("Panel2"), multiple = TRUE,

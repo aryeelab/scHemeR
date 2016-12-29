@@ -69,22 +69,24 @@ shinyServer(function(input, output, session) {
     observe({ rv$tfname <- tfshort[input$TFchosenFromGroup] }) 
     
     output$plotgraph1 = renderPlotly({
+        
+        a <- input$xaxisVal
+        b <- input$yaxisVal
+        c <- input$zaxisVal
+        le <- list(eye = list(x = 3, y = -0.5, z = 1))
+        
         if(input$colorVisPoints == "Cell" | input$colorVisPoints == "Cluster"){
             if(input$colorVisPoints == "Cell"){
                 cf <- factor(rgbhex, levels = as.character(unique(rgbhex)), ordered = TRUE)
             } else {
                 cf <- factor(rgbclust, levels = as.character(unique(rgbclust)), ordered = TRUE)
             }
-            
-            a <- input$xaxisVal
-            b <- input$yaxisVal
-            c <- input$zaxisVal
 
             d <- data.frame(cellnames, X = pca[,a], Y = pca[,b], Z = pca[,c], colidx = as.integer(cf))
             plot_ly(d, x = ~X, y = ~Y, z = ~Z, text = paste0("Cell:", cellnames),
                     type="scatter3d", mode="markers", marker = list(size = 3),
-                    color = ~as.ordered(colidx), colors = as.character(unique(cf))) %>%
-                layout(title = "", showlegend = FALSE,scene = list(xaxis = list(title = a), yaxis = list(title = b), zaxis = list(title = c)))
+                    color = ~as.ordered(colidx), colors = as.character(unique(cf))) %>% layout(dragmode = "orbit", scene = list(aspectmode = 'cube')) %>%
+                layout(title = "", showlegend = FALSE, scene = list(xaxis = list(title = a), yaxis = list(title = b), zaxis = list(title = c), camera = le))
             
         } else { # TF score
             col <- as.numeric(rv$valVec)
@@ -99,7 +101,8 @@ shinyServer(function(input, output, session) {
             }
             plot_ly(d, x = ~PC1, y = ~PC2, z = ~PC3, text = ~paste0("Cell: ",  cellnames, "<br>", "TF Score: ", Score),
                         type="scatter3d", mode="markers", marker = list(size = 3),
-                        color = ~Score, colors = cols)
+                        color = ~Score, colors = cols) %>% layout(dragmode = "orbit") %>%
+                layout(title = "", showlegend = FALSE, scene = list(xaxis = list(title = a), yaxis = list(title = b), zaxis = list(title = c), camera = le))
         }
         
     })

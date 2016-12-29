@@ -38,7 +38,7 @@ pca <- data.matrix(dat[,5:14])
 
 # Scale range to [-1, 1]
 range02 <- function(x, newMax = 1, newMin = -1){ (x - min(x))/(max(x)-min(x)) * (newMax - newMin) + newMin }
-pca <- apply(pca, 2, range02)
+#pca <- apply(pca, 2, range02)
 
 tfnames <- col
 colnames(mdat) <- col
