@@ -108,7 +108,7 @@ shinyServer(function(input, output, session) {
                     cols <- input$contColorTheme
                 }
             if(input$dimPlot == "3D"){
-                plot_ly(d, x = ~PC1, y = ~PC2, z = ~PC3, text = ~paste0("Cell: ",  cellnames, "<br>", "TF Score: ", Score),
+                plot_ly(d, x = ~X, y = ~Y, z = ~Z, text = ~paste0("Cell: ",  cellnames, "<br>", "TF Score: ", Score),
                         type="scatter3d", mode="markers", marker = list(size = 3),
                         color = ~Score, colors = cols) %>% layout(dragmode = "orbit",  scene = list(aspectmode = 'cube')) %>%
                 layout(title = "", showlegend = FALSE, scene = list(xaxis = list(title = a), yaxis = list(title = b), zaxis = list(title = c), camera = le))
