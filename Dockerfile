@@ -27,7 +27,7 @@ RUN sed -i '/location \/ {/a app_idle_timeout 0;' /etc/shiny-server/shiny-server
 RUN sed -i '/location \/ {/a app_init_timeout 60;' /etc/shiny-server/shiny-server.conf
 
 # Add Google Analytics tracking code
-# RUN sed -i '/location \/ {/a google_analytics_id UA-37764824-4;' /etc/shiny-server/shiny-server.conf
+RUN sed -i '/location \/ {/a google_analytics_id UA-85072543-2;' /etc/shiny-server/shiny-server.conf
 
 # Start and expose shiny server
 EXPOSE 3838
