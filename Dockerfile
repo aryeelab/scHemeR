@@ -1,7 +1,7 @@
 FROM rocker/shiny
 
-RUN rm /var/lib/apt/lists/*dists* && \
-    apt-get update && \
+#RUN rm /var/lib/apt/lists/*dists* && \
+RUN apt-get update && \
     apt-get install -y git libxml2-dev libssl-dev ghostscript
  
 # Install scHemeR
