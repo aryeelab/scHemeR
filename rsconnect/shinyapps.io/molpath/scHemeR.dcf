@@ -1,0 +1,11 @@
+name: scHemeR
+title: scHemeR
+account: molpath
+server: shinyapps.io
+appId: 195411
+bundleId: 897453
+url: https://molpath.shinyapps.io/scHemeR/
+when: 1499639930.0004
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: dataProcess/121208_pc.txt|dataProcess/cisbp_hg19_unique.08_Jun_2016.RData|dataProcess/cluster_info.txt|dataProcess/datProcess_121208.R|dataProcess/datProcess.R|dataProcess/hg19_corrMat_08-Jun-2016.mat|dataProcess/jasonPlaySpring.R|dataProcess/mm9_corrMat_08-Jun-2016.mat|dataProcess/motifs_data.col.xls|dataProcess/motifs_data.row.xls|dataProcess/motifs_data.xls|dataProcess/PCprojections_new.xlsx|dataProcess/scHemeData_v2.txt
