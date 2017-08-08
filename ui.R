@@ -1,7 +1,7 @@
 source("extRa/libraries.R")
 source("extRa/datImport.R")
 
-shinyUI(navbarPage(HTML("<img src='harvard-logo.png'/>"),
+shinyUI(navbarPage(HTML("SCHEMER"),
                    
 ##########
 # Plot
@@ -15,7 +15,7 @@ fluidPage(
     shiny::tags$br(),shiny::tags$br(), shiny::tags$br(), HTML("<h4><b><P ALIGN=Center>Buenrostro Lab</b></h4>"),
     shiny::tags$br(),shiny::tags$br(),
     bsCollapse(id = "collapseAdvancedPlotOptions", open = c("Panel1"), multiple = TRUE,
-    bsCollapsePanel(title = HTML("<h4><b>Visualization Options</b></h4>"), value = "Panel1",
+    bsCollapsePanel(title = HTML("<h4><b>Visualization Options</b></h4>"), value = "Panel1", style = "info", 
     fluidRow(
         column(4, 
         radioButtons("dimPlot", "Dimension:", choices = list("2D" = "2D", "3D" = "3D"), selected = "3D"),
@@ -51,16 +51,17 @@ fluidPage(
         ))
     ))
     ), 
-    bsCollapse(id = "plotOut", open = c("PlotGraph"), multiple = TRUE,
-        bsCollapsePanel(title = HTML("<h4><b>Interactive Plot</b></h4>"), value = "PlotGraph",
-        fluidRow(plotlyOutput("plotgraph1", height = "800", width = "100%"))))
+      bsCollapse(id = "plotOut", open = c("PlotGraph"), multiple = TRUE,
+        bsCollapsePanel(title = HTML("<h4><b>Interactive Plot</b></h4>"), value = "PlotGraph", style = "info", 
+        fluidRow(column(1, tags$br()), column(10, plotlyOutput("plotgraph1", height = "800", width = "100%")), column(1, tags$br()))
+        )
     ), shiny::tags$br(),shiny::tags$br(),
     conditionalPanel('input.colorVisPoints != "Cell" && input.colorVisPoints != "Cluster"', 
-        bsCollapse(id = "tfMotif", open = c("Panel2"), multiple = TRUE,
+      bsCollapse(id = "tfMotif", open = c("Panel2"), multiple = TRUE,
         bsCollapsePanel(title = HTML("<h4><b>Transcription Factor Motif</b></h4>"), value = "Panel2",
         fluidRow(plotOutput("TFplot")))
     ))
-)),                   
+))),                   
                                       
 ##########
 # GUIDE

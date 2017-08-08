@@ -73,7 +73,7 @@ shinyServer(function(input, output, session) {
         a <- input$xaxisVal
         b <- input$yaxisVal
         c <- input$zaxisVal
-        le <- list(eye = list(x = 3, y = -0.5, z = 1))
+        le <- list(eye = list(x = 2, y = 0, z = 0.5))
         
         if(input$colorVisPoints == "Cell" | input$colorVisPoints == "Cluster"){
             if(input$colorVisPoints == "Cell"){
@@ -82,13 +82,15 @@ shinyServer(function(input, output, session) {
                 cf <- factor(rgbclust, levels = as.character(unique(rgbclust)), ordered = TRUE)
             }
 
-            d <- data.frame(cellnames, X = pca[,a], Y = pca[,b], Z = pca[,c], colidx = as.integer(cf))
+            d <- data.frame(cellnames, X = pca[,a], Y = -1*pca[,b], Z = pca[,c], colidx = as.integer(cf))
             
             if(input$dimPlot == "3D"){
                 plot_ly(d, x = ~X, y = ~Y, z = ~Z, text = paste0("Cell:", cellnames),
                     type="scatter3d", mode="markers", marker = list(size = 3),
                     color = ~as.ordered(colidx), colors = as.character(unique(cf))) %>% layout(dragmode = "orbit", scene = list(aspectmode = 'cube')) %>%
-                layout(title = "", showlegend = FALSE, scene = list(xaxis = list(title = a), yaxis = list(title = b), zaxis = list(title = c), camera = le))
+                layout(title = "", showlegend = FALSE, scene = list(xaxis = list(title = a),
+                                                                    yaxis = list(title = b),
+                                                                    zaxis = list(title = c), camera = le))
             } else {
                 plot_ly(d, x = ~X, y = ~Y, text = paste0("Cell:", cellnames),
                     mode="markers", marker = list(size = 6),
@@ -99,7 +101,7 @@ shinyServer(function(input, output, session) {
             col <- as.numeric(rv$valVec)
             col[col < input$minMaxColor[1]] <- input$minMaxColor[1]
             col[col > input$minMaxColor[2]] <- input$minMaxColor[2]
-            d <- data.frame(cellnames, X = pca[,a], Y = pca[,b], Z = pca[,c], Score = col, stringsAsFactors = FALSE)
+            d <- data.frame(cellnames, X = pca[,a], Y = -1*pca[,b], Z = pca[,c], Score = col, stringsAsFactors = FALSE)
             
             #Adjust for spectral
             if(input$contColorTheme == "Spectral"){
@@ -111,7 +113,7 @@ shinyServer(function(input, output, session) {
                 plot_ly(d, x = ~X, y = ~Y, z = ~Z, text = ~paste0("Cell: ",  cellnames, "<br>", "TF Score: ", Score),
                         type="scatter3d", mode="markers", marker = list(size = 3),
                         color = ~Score, colors = cols) %>% layout(dragmode = "orbit",  scene = list(aspectmode = 'cube')) %>%
-                layout(title = "", showlegend = FALSE, scene = list(xaxis = list(title = a), yaxis = list(title = b), zaxis = list(title = c), camera = le))
+                layout(title = "", showlegend = FALSE, scene = list(xaxis = list(title = a), yaxis = list(title = b,  autorange = "reversed"), zaxis = list(title = c), camera = le))
             } else { #2D map
                  plot_ly(d, x = ~X, y = ~Y, text = ~paste0("Cell: ",  cellnames, "<br>", "TF Score: ", Score),
                     mode="markers", marker = list(size = 6),

@@ -69,7 +69,7 @@ seqLogo(m)
 library(R.matlab)
 library(reshape2)
 
-m <- readMat("dataProcess/hg19_corrMat_08-Jun-2016.mat")
+m <- readMat("dataProcess/mm9_corrMat_08-Jun-2016.mat")
 corM <- m$corrMat
 colnames(corM) <- unname(unlist(m$TFnames))
 row.names(corM) <- unname(unlist(m$TFnames))
@@ -77,7 +77,11 @@ corM[upper.tri(corM, diag = TRUE)] <- NA
 mlong <- reshape2::melt(corM, na.rm = TRUE)
 rownames(mlong) <- NULL
 
-saveRDS(mlong, "data/humanTFcorr.rds")
+#saveRDS(mlong, "data/humanTFcorr.rds")
+
+colnames(mlong) <- c("TF1", "TF2", "Pearson")
+saveRDS(mlong, file = "mouse_cisBP_correlationMatrix.rds")  
+
 
 # Process correlation lists
 corvals <- seq(0.15, 1.00, 0.01)
